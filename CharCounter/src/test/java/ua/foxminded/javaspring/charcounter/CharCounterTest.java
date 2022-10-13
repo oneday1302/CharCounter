@@ -36,7 +36,7 @@ class CharCounterTest {
     }
     
     @Test
-    void counter_shouldReturnTreeSymbol_whenInputTreeSymbol() {
+    void counter_shouldReturntThreeSymbol_whenInputThreeSymbol() {
         CharCounter charCounter = new CharCounter();
         String expected = charCounter.counter("!!!");
         
