@@ -25,14 +25,22 @@ public class LRUCache {
     private int currentSize;
 
     public LRUCache(int maxSize) {
+        if (maxSize <= 0) {
+            throw new IllegalArgumentException("Size cannot be less than or equal to zero.");
+        }
+
         this.maxSize = maxSize;
         currentSize = 0;
         leastRecentlyUsed = new Node(null, null, null, null);
         mostRecentlyUsed = leastRecentlyUsed;
-        cache = new HashMap<String, Node>();
+        cache = new HashMap<>();
     }
 
     public String get(String key) {
+        if (key == null) {
+            throw new IllegalArgumentException("Param cannot be null.");
+        }
+
         Node tempNode = cache.get(key);
         if (tempNode == null) {
             return null;
@@ -60,6 +68,10 @@ public class LRUCache {
     }
 
     public void put(String key, String value) {
+        if (key == null || value == null) {
+            throw new IllegalArgumentException("Params cannot be null.");
+        }
+
         if (cache.containsKey(key)) {
             return;
         }
@@ -82,6 +94,9 @@ public class LRUCache {
     }
 
     public boolean containsKey(String key) {
+        if (key == null) {
+            throw new IllegalArgumentException("Params cannot be null.");
+        }
         return cache.containsKey(key);
     }
 }

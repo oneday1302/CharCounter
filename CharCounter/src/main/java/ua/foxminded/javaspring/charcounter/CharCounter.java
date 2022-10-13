@@ -9,12 +9,20 @@ public class CharCounter {
     private final LRUCache cache = new LRUCache(5);
 
     public String counter(String value) {
+        if (value == null) {
+            throw new IllegalArgumentException("Param cannot be null.");
+        }
+        
+        if (value.isEmpty()) {
+            return value;
+        }
+
         if (cache.containsKey(value)) {
             return cache.get(value);
         }
 
         char[] valueCharArray = value.toCharArray();
-        Map<String, Integer> map = new LinkedHashMap<String, Integer>();
+        Map<String, Integer> map = new LinkedHashMap<>();
 
         for (char c : valueCharArray) {
             if (map.containsKey("\"" + Character.toString(c) + "\"")) {
