@@ -6,7 +6,13 @@ import java.util.StringJoiner;
 
 public class CharCounter {
 
+    private final LRUCache cache = new LRUCache(5);
+
     public String counter(String value) {
+        if (cache.containsKey(value)) {
+            return cache.get(value);
+        }
+
         char[] valueCharArray = value.toCharArray();
         Map<String, Integer> map = new LinkedHashMap<String, Integer>();
 
@@ -23,6 +29,7 @@ public class CharCounter {
             result.add(String.format("%s - %d", entry.getKey(), entry.getValue()));
         }
         result.add("");
+        cache.put(value, result.toString());
         return result.toString();
     }
 }
