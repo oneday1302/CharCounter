@@ -6,7 +6,6 @@ import java.util.Map;
 public class LRUCache extends LinkedHashMap<String, Map<Character, Integer>> {
 
     private static final long serialVersionUID = 1L;
-
     private int size;
 
     public LRUCache(int size) {
