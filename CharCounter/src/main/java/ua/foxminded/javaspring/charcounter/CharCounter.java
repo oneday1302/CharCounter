@@ -2,42 +2,25 @@ package ua.foxminded.javaspring.charcounter;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.StringJoiner;
 
-public class CharCounter {
+public class CharCounter implements Counter {
 
-    private final LRUCache cache = new LRUCache(5);
-
-    public String counter(String value) {
+    @Override
+    public Map<Character, Integer> count(String value) {
         if (value == null) {
             throw new IllegalArgumentException("Param cannot be null.");
         }
-        
-        if (value.isEmpty()) {
-            return value;
-        }
-
-        if (cache.containsKey(value)) {
-            return cache.get(value);
-        }
 
         char[] valueCharArray = value.toCharArray();
-        Map<String, Integer> map = new LinkedHashMap<>();
+        Map<Character, Integer> result = new LinkedHashMap<>();
 
         for (char c : valueCharArray) {
-            if (map.containsKey("\"" + Character.toString(c) + "\"")) {
-                map.put("\"" + Character.toString(c) + "\"", map.get("\"" + Character.toString(c) + "\"") + 1);
+            if (result.containsKey(c)) {
+                result.put(c, result.get(c) + 1);
             } else {
-                map.put("\"" + Character.toString(c) + "\"", 1);
+                result.put(c, 1);
             }
         }
-        StringJoiner result = new StringJoiner(System.lineSeparator());
-        result.add(value);
-        for (Map.Entry<String, Integer> entry : map.entrySet()) {
-            result.add(String.format("%s - %d", entry.getKey(), entry.getValue()));
-        }
-        result.add("");
-        cache.put(value, result.toString());
-        return result.toString();
+        return result;
     }
 }

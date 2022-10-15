@@ -2,72 +2,65 @@ package ua.foxminded.javaspring.charcounter;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.*;
-import java.util.StringJoiner;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class CharCounterTest {
 
     @Test
-    void counter_shouldReturnIllegalArgumentException_whenInputNull() {
+    void count_shouldReturnIllegalArgumentException_whenInputNull() {
         CharCounter charCounter = new CharCounter();
         assertThrows(IllegalArgumentException.class, () -> {
-            charCounter.counter(null);
+            charCounter.count(null);
         });
     }
-    
+
     @Test
-    void counter_shouldReturnEmptyString_whenInputEmptyString() {
+    void count_shouldReturnEmptyMap_whenInputEmptyString() {
         CharCounter charCounter = new CharCounter();
-        assertEquals("", charCounter.counter(""));
-    }
-    
-    @Test
-    void counter_shouldReturnOneSymbol_whenInputOneSymbol() {
-        CharCounter charCounter = new CharCounter();
-        String expected = charCounter.counter("!");
-        
-        String actual = new StringJoiner(System.lineSeparator())
-                .add("!")
-                .add("\"!\" - 1")
-                .add("")
-                .toString();
-        
+        Map<Character, Integer> expected = charCounter.count("");
+        Map<Character, Integer> actual = new LinkedHashMap<>();
+
         assertEquals(actual, expected);
     }
-    
+
     @Test
-    void counter_shouldReturntThreeSymbol_whenInputThreeSymbol() {
+    void count_shouldReturnMapWithOneSymbol_whenInputOneSymbol() {
         CharCounter charCounter = new CharCounter();
-        String expected = charCounter.counter("!!!");
-        
-        String actual = new StringJoiner(System.lineSeparator())
-                .add("!!!")
-                .add("\"!\" - 3")
-                .add("")
-                .toString();
-        
+        Map<Character, Integer> expected = charCounter.count("!");
+        Map<Character, Integer> actual = new LinkedHashMap<>();
+        actual.put('!', 1);
+
         assertEquals(actual, expected);
     }
-    
+
     @Test
-    void counter_shouldReturnString_whenInputNormalString() {
+    void count_shouldReturntThreeSymbol_whenInputThreeSymbol() {
         CharCounter charCounter = new CharCounter();
-        String expected = charCounter.counter("hello word!");
-        
-        String actual = new StringJoiner(System.lineSeparator())
-                .add("hello word!")
-                .add("\"h\" - 1")
-                .add("\"e\" - 1")
-                .add("\"l\" - 2")
-                .add("\"o\" - 2")
-                .add("\" \" - 1")
-                .add("\"w\" - 1")
-                .add("\"r\" - 1")
-                .add("\"d\" - 1")
-                .add("\"!\" - 1")
-                .add("")
-                .toString();
-               
+        Map<Character, Integer> expected = charCounter.count("!!!");
+        Map<Character, Integer> actual = new LinkedHashMap<>();
+        actual.put('!', 3);
+
+        assertEquals(actual, expected);
+    }
+
+    @Test
+    void count_shouldReturnMap_whenInputNormalString() {
+        CharCounter charCounter = new CharCounter();
+        Map<Character, Integer> expected = charCounter.count("hello word!");
+        Map<Character, Integer> actual = new LinkedHashMap<>();
+        actual.put('h', 1);
+        actual.put('e', 1);
+        actual.put('l', 2);
+        actual.put('o', 2);
+        actual.put(' ', 1);
+        actual.put('w', 1);
+        actual.put('r', 1);
+        actual.put('d', 1);
+        actual.put('!', 1);
+
         assertEquals(actual, expected);
     }
 }
