@@ -1,13 +1,11 @@
 package ua.foxminded.javaspring.charcounter;
 
-import java.util.Map;
-
-public class CounterWithCache implements Counter {
+public class CachedCharCounter implements Counter {
 
     private Counter counter;
     private LRUCache cache;
 
-    public CounterWithCache(Counter counter, int cacheSize) {
+    public CachedCharCounter(Counter counter, int cacheSize) {
         if (counter == null) {
             throw new IllegalArgumentException("Param cannot be null.");
         }
@@ -21,16 +19,16 @@ public class CounterWithCache implements Counter {
     }
 
     @Override
-    public Map<Character, Integer> count(String value) {
+    public CounterResult count(String value) {
         if (value == null) {
             throw new IllegalArgumentException("Param cannot be null.");
         }
-        
+
         if (cache.containsKey(value)) {
             return cache.get(value);
         }
 
-        Map<Character, Integer> result = counter.count(value);
+        CounterResult result = counter.count(value);
         cache.put(value, result);
         return result;
     }

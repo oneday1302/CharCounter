@@ -10,27 +10,10 @@ import org.junit.jupiter.api.Test;
 class FormatterTest {
 
     @Test
-    void format_shouldReturnIllegalArgumentException_whenInputFirstParamNull() {
-        Formatter formatter = new Formatter();
-        Map<Character, Integer> map = new LinkedHashMap<>();
-        assertThrows(IllegalArgumentException.class, () -> {
-            formatter.format(null, map);
-        });
-    }
-
-    @Test
-    void format_shouldReturnIllegalArgumentException_whenInputSecondParamNull() {
+    void format_shouldReturnIllegalArgumentException_whenInputNull() {
         Formatter formatter = new Formatter();
         assertThrows(IllegalArgumentException.class, () -> {
-            formatter.format("a", null);
-        });
-    }
-
-    @Test
-    void format_shouldReturnIllegalArgumentException_whenInputBothParamsNull() {
-        Formatter formatter = new Formatter();
-        assertThrows(IllegalArgumentException.class, () -> {
-            formatter.format(null, null);
+            formatter.format(null);
         });
     }
 
@@ -39,30 +22,31 @@ class FormatterTest {
         Map<Character, Integer> map = new LinkedHashMap<>();
         map.put('h', 1);
         map.put('e', 1);
-        map.put('l', 2);
+        map.put('l', 3);
         map.put('o', 2);
         map.put(' ', 1);
         map.put('w', 1);
         map.put('r', 1);
         map.put('d', 1);
         map.put('!', 1);
-
+        CounterResult counterResult = new CounterResult("hello world!", map);
+        
         Formatter formatter = new Formatter();
-        String expected = formatter.format("hello word!", map);
+        String actual = formatter.format(counterResult);
 
-        StringJoiner actual = new StringJoiner(System.lineSeparator());
-        actual.add("hello word!");
-        actual.add("\"h\" - 1");
-        actual.add("\"e\" - 1");
-        actual.add("\"l\" - 2");
-        actual.add("\"o\" - 2");
-        actual.add("\" \" - 1");
-        actual.add("\"w\" - 1");
-        actual.add("\"r\" - 1");
-        actual.add("\"d\" - 1");
-        actual.add("\"!\" - 1");
-        actual.add("");
+        StringJoiner expected = new StringJoiner(System.lineSeparator());
+        expected.add("hello world!");
+        expected.add("\"h\" - 1");
+        expected.add("\"e\" - 1");
+        expected.add("\"l\" - 3");
+        expected.add("\"o\" - 2");
+        expected.add("\" \" - 1");
+        expected.add("\"w\" - 1");
+        expected.add("\"r\" - 1");
+        expected.add("\"d\" - 1");
+        expected.add("\"!\" - 1");
+        expected.add("");
 
-        assertEquals(actual.toString(), expected);
+        assertEquals(expected.toString(), actual);
     }
 }

@@ -5,15 +5,15 @@ import java.util.StringJoiner;
 
 public class Formatter {
 
-    public String format(String value, Map<Character, Integer> map) {
-        if (value == null || map == null) {
-            throw new IllegalArgumentException("Params cannot be null.");
+    public String format(CounterResult counterResult) {
+        if (counterResult == null) {
+            throw new IllegalArgumentException("Param cannot be null.");
         }
 
         StringJoiner result = new StringJoiner(System.lineSeparator());
-        result.add(value);
-        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
-            result.add(String.format("\"%s\" - %d", entry.getKey(), entry.getValue()));
+        result.add(counterResult.getTitle());
+        for (Map.Entry<Character, Integer> entry : counterResult.getMap().entrySet()) {
+            result.add(String.format("\"%c\" - %d", entry.getKey(), entry.getValue()));
         }
         result.add("");
         return result.toString();

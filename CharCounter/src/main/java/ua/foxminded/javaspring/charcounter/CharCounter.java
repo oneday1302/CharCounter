@@ -6,21 +6,15 @@ import java.util.Map;
 public class CharCounter implements Counter {
 
     @Override
-    public Map<Character, Integer> count(String value) {
+    public CounterResult count(String value) {
         if (value == null) {
             throw new IllegalArgumentException("Param cannot be null.");
         }
 
-        char[] valueCharArray = value.toCharArray();
-        Map<Character, Integer> result = new LinkedHashMap<>();
-
-        for (char c : valueCharArray) {
-            if (result.containsKey(c)) {
-                result.put(c, result.get(c) + 1);
-            } else {
-                result.put(c, 1);
-            }
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        for (char c : value.toCharArray()) {
+            map.merge(c, 1, (prev, one) -> prev + one);
         }
-        return result;
+        return new CounterResult(value, map);
     }
 }

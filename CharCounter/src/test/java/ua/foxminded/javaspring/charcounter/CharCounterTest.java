@@ -19,47 +19,51 @@ class CharCounterTest {
     @Test
     void count_shouldReturnEmptyMap_whenInputEmptyString() {
         CharCounter charCounter = new CharCounter();
-        Map<Character, Integer> expected = charCounter.count("");
-        Map<Character, Integer> actual = new LinkedHashMap<>();
+        CounterResult actual = charCounter.count("");
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        CounterResult expected = new CounterResult("", map);
 
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void count_shouldReturnMapWithOneSymbol_whenInputOneSymbol() {
         CharCounter charCounter = new CharCounter();
-        Map<Character, Integer> expected = charCounter.count("!");
-        Map<Character, Integer> actual = new LinkedHashMap<>();
-        actual.put('!', 1);
+        CounterResult actual = charCounter.count("!");
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        map.put('!', 1);
+        CounterResult expected = new CounterResult("!", map);
 
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
     void count_shouldReturntThreeSymbol_whenInputThreeSymbol() {
         CharCounter charCounter = new CharCounter();
-        Map<Character, Integer> expected = charCounter.count("!!!");
-        Map<Character, Integer> actual = new LinkedHashMap<>();
-        actual.put('!', 3);
+        CounterResult actual = charCounter.count("!!!");
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        map.put('!', 3);
+        CounterResult expected = new CounterResult("!!!", map);
 
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 
     @Test
-    void count_shouldReturnMap_whenInputNormalString() {
+    void count_shouldReturnCounterResult_whenInputNormalString() {
         CharCounter charCounter = new CharCounter();
-        Map<Character, Integer> expected = charCounter.count("hello word!");
-        Map<Character, Integer> actual = new LinkedHashMap<>();
-        actual.put('h', 1);
-        actual.put('e', 1);
-        actual.put('l', 2);
-        actual.put('o', 2);
-        actual.put(' ', 1);
-        actual.put('w', 1);
-        actual.put('r', 1);
-        actual.put('d', 1);
-        actual.put('!', 1);
+        CounterResult actual = charCounter.count("hello world!");
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        map.put('h', 1);
+        map.put('e', 1);
+        map.put('l', 3);
+        map.put('o', 2);
+        map.put(' ', 1);
+        map.put('w', 1);
+        map.put('r', 1);
+        map.put('d', 1);
+        map.put('!', 1);
+        CounterResult expected = new CounterResult("hello world!", map); 
 
-        assertEquals(actual, expected);
+        assertEquals(expected, actual);
     }
 }
