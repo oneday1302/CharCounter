@@ -13,7 +13,7 @@ public class CharCounter implements Counter {
 
         Map<Character, Integer> map = new LinkedHashMap<>();
         for (char c : value.toCharArray()) {
-            map.merge(c, 1, (prev, one) -> prev + one);
+            map.merge(c, 1, Integer::sum);
         }
         return new CounterResult(value, map);
     }
