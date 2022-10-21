@@ -86,45 +86,13 @@ class LRUCacheTest {
 
     @Test
     void lookup_shouldReturnInvalidatesEldestEntry_whenInputSeveralString() {
-        Map<Character, Integer> mapHelloWorld = new LinkedHashMap<>();
-        mapHelloWorld.put('h', 1);
-        mapHelloWorld.put('e', 1);
-        mapHelloWorld.put('l', 2);
-        mapHelloWorld.put('o', 2);
-        mapHelloWorld.put(' ', 1);
-        mapHelloWorld.put('w', 1);
-        mapHelloWorld.put('r', 1);
-        mapHelloWorld.put('d', 1);
-        mapHelloWorld.put('!', 1);
-
-        Map<Character, Integer> mapMyNameIsVlad = new LinkedHashMap<>();
-        mapMyNameIsVlad.put('M', 1);
-        mapMyNameIsVlad.put('y', 1);
-        mapMyNameIsVlad.put(' ', 3);
-        mapMyNameIsVlad.put('n', 1);
-        mapMyNameIsVlad.put('a', 2);
-        mapMyNameIsVlad.put('m', 1);
-        mapMyNameIsVlad.put('e', 1);
-        mapMyNameIsVlad.put('i', 1);
-        mapMyNameIsVlad.put('s', 1);
-        mapMyNameIsVlad.put('V', 1);
-        mapMyNameIsVlad.put('l', 1);
-        mapMyNameIsVlad.put('d', 1);
-        mapMyNameIsVlad.put('!', 1);
-
-        Map<Character, Integer> mapTest = new LinkedHashMap<>();
-        mapTest.put('t', 2);
-        mapTest.put('e', 1);
-        mapTest.put('s', 1);
-
-        CounterResult resultHelloWorld = new CounterResult("hello world!", mapHelloWorld);
-        CounterResult resultMyNameIsVlad = new CounterResult("My name is Vlad!", mapMyNameIsVlad);
-        CounterResult resultTest = new CounterResult("test!", mapTest);
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        CounterResult result = new CounterResult("test", map);
 
         Counter mockCounter = Mockito.mock(Counter.class);
-        when(mockCounter.count("hello world!")).thenReturn(resultHelloWorld);
-        when(mockCounter.count("My name is Vlad!")).thenReturn(resultMyNameIsVlad);
-        when(mockCounter.count("test")).thenReturn(resultTest);
+        when(mockCounter.count("hello world!")).thenReturn(result);
+        when(mockCounter.count("My name is Vlad!")).thenReturn(result);
+        when(mockCounter.count("test")).thenReturn(result);
 
         LRUCache<String, CounterResult> cache = new LRUCache<>(mockCounter::count, 2);
         cache.lookup("hello world!");
@@ -133,5 +101,19 @@ class LRUCacheTest {
         cache.lookup("hello world!");
 
         verify(mockCounter, times(2)).count("hello world!");
+    }
+    @Test
+    void lookup_shouldReturnSavesValuePassedViaPut_whenInputSeveralString() {
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        CounterResult result = new CounterResult("test", map);
+
+        Counter mockCounter = Mockito.mock(Counter.class);
+        when(mockCounter.count("hello world!")).thenReturn(result);
+
+        LRUCache<String, CounterResult> cache = new LRUCache<>(mockCounter::count, 2);
+        cache.lookup("hello world!");
+        cache.lookup("hello world!");
+
+        verify(mockCounter, times(1)).count("hello world!");
     }
 }

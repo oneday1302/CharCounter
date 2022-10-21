@@ -16,9 +16,6 @@ public class CachedCharCounter implements Counter {
 
     @Override
     public CounterResult count(String value) {
-        if (value == null) {
-            throw new IllegalArgumentException("Param cannot be null.");
-        }
         return cache.lookup(value);
     }
 }

@@ -70,13 +70,6 @@ class CachedCharCounterTest {
 
     @Test
     void count_shouldReturnCounterResult_whenInputSeveralString() {
-        List<String> list = new ArrayList<>();
-        list.add("hello world!");
-        list.add("My name is Vlad!");
-        list.add("Hello");
-        list.add("hello world!");
-        list.add("test");
-        
         Map<Character, Integer> mapHelloWorld = new LinkedHashMap<>();
         mapHelloWorld.put('h', 1);
         mapHelloWorld.put('e', 1);
@@ -114,81 +107,65 @@ class CachedCharCounterTest {
         mapTest.put('e', 1);
         mapTest.put('s', 1);
 
-        CounterResult expected1 = new CounterResult("hello world!", mapHelloWorld);
-        CounterResult expected2 = new CounterResult("My name is Vlad!", mapMyNameIsVlad);
-        CounterResult expected3 = new CounterResult("Hello", mapHello);
-        CounterResult expected4 = new CounterResult("hello world!", mapHelloWorld);
-        CounterResult expected5 = new CounterResult("test", mapTest);
-
-        List<CounterResult> expecteds = new ArrayList<>();
-        expecteds.add(expected1);
-        expecteds.add(expected2);
-        expecteds.add(expected3);
-        expecteds.add(expected4);
-        expecteds.add(expected5);
+        CounterResult expectedHelloWorld = new CounterResult("hello world!", mapHelloWorld);
+        CounterResult expectedMyNameIsVlad = new CounterResult("My name is Vlad!", mapMyNameIsVlad);
+        CounterResult expectedHello = new CounterResult("Hello", mapHello);
+        CounterResult expectedTest = new CounterResult("test", mapTest);
 
         Counter mockCounter = Mockito.mock(Counter.class);
-        when(mockCounter.count("hello world!")).thenReturn(expected1);
-        when(mockCounter.count("My name is Vlad!")).thenReturn(expected2);
-        when(mockCounter.count("Hello")).thenReturn(expected3);
-        when(mockCounter.count("hello world!")).thenReturn(expected4);
-        when(mockCounter.count("test")).thenReturn(expected5);
+        when(mockCounter.count("hello world!")).thenReturn(expectedHelloWorld);
+        when(mockCounter.count("My name is Vlad!")).thenReturn(expectedMyNameIsVlad);
+        when(mockCounter.count("Hello")).thenReturn(expectedHello);
+        when(mockCounter.count("test")).thenReturn(expectedTest);
 
         CachedCharCounter cachedCharCounter = new CachedCharCounter(mockCounter, 3);
-        for (int i = 0; i < list.size(); i++) {
-            CounterResult actual = cachedCharCounter.count(list.get(i));
-            assertEquals(expecteds.get(i), actual);
-        }
+        CounterResult actualHelloWorld = cachedCharCounter.count("hello world!");
+        assertEquals(expectedHelloWorld, actualHelloWorld);
+        CounterResult actualMyNameIsVlad = cachedCharCounter.count("My name is Vlad!");
+        assertEquals(expectedMyNameIsVlad, actualMyNameIsVlad);
+        CounterResult actualHello = cachedCharCounter.count("Hello");
+        assertEquals(expectedHello, actualHello);
+        actualHelloWorld = cachedCharCounter.count("hello world!");
+        assertEquals(expectedHelloWorld, actualHelloWorld);
+        CounterResult actualTest = cachedCharCounter.count("test");
+        assertEquals(expectedTest, actualTest);
     }
 
     @Test
     void count_shouldInvalidatesEldestEntry_whenInputSeveralString() {
-        Map<Character, Integer> mapHelloWorld = new LinkedHashMap<>();
-        mapHelloWorld.put('h', 1);
-        mapHelloWorld.put('e', 1);
-        mapHelloWorld.put('l', 2);
-        mapHelloWorld.put('o', 2);
-        mapHelloWorld.put(' ', 1);
-        mapHelloWorld.put('w', 1);
-        mapHelloWorld.put('r', 1);
-        mapHelloWorld.put('d', 1);
-        mapHelloWorld.put('!', 1);
-
-        Map<Character, Integer> mapMyNameIsVlad = new LinkedHashMap<>();
-        mapMyNameIsVlad.put('M', 1);
-        mapMyNameIsVlad.put('y', 1);
-        mapMyNameIsVlad.put(' ', 3);
-        mapMyNameIsVlad.put('n', 1);
-        mapMyNameIsVlad.put('a', 2);
-        mapMyNameIsVlad.put('m', 1);
-        mapMyNameIsVlad.put('e', 1);
-        mapMyNameIsVlad.put('i', 1);
-        mapMyNameIsVlad.put('s', 1);
-        mapMyNameIsVlad.put('V', 1);
-        mapMyNameIsVlad.put('l', 1);
-        mapMyNameIsVlad.put('d', 1);
-        mapMyNameIsVlad.put('!', 1);
-        
-        Map<Character, Integer> mapTest = new LinkedHashMap<>();
-        mapTest.put('t', 2);
-        mapTest.put('e', 1);
-        mapTest.put('s', 1);
-
-        CounterResult resultHelloWorld = new CounterResult("hello world!", mapHelloWorld);
-        CounterResult resultMyNameIsVlad = new CounterResult("My name is Vlad!", mapMyNameIsVlad);
-        CounterResult resultTest = new CounterResult("test!", mapTest);
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        CounterResult result = new CounterResult("test", map);
 
         Counter mockCounter = Mockito.mock(Counter.class);
-        when(mockCounter.count("hello world!")).thenReturn(resultHelloWorld);
-        when(mockCounter.count("My name is Vlad!")).thenReturn(resultMyNameIsVlad);
-        when(mockCounter.count("test")).thenReturn(resultTest);
+        when(mockCounter.count("hello world!")).thenReturn(result);
+        when(mockCounter.count("My name is Vlad!")).thenReturn(result);
+        when(mockCounter.count("Hello")).thenReturn(result);
+        when(mockCounter.count("test")).thenReturn(result);
 
         CachedCharCounter cachedCharCounter = new CachedCharCounter(mockCounter, 2);
         cachedCharCounter.count("hello world!");
+        cachedCharCounter.count("Hello");
+        cachedCharCounter.count("Hello");
         cachedCharCounter.count("My name is Vlad!");
         cachedCharCounter.count("test");
         cachedCharCounter.count("hello world!");
 
+        verify(mockCounter, times(1)).count("Hello");
         verify(mockCounter, times(2)).count("hello world!");
+    }
+    
+    @Test
+    void count_shouldSavesValuePassedViaPut_whenInputSeveralString() {
+        Map<Character, Integer> map = new LinkedHashMap<>();
+        CounterResult result = new CounterResult("test", map);
+
+        Counter mockCounter = Mockito.mock(Counter.class);
+        when(mockCounter.count("hello world!")).thenReturn(result);
+
+        CachedCharCounter cachedCharCounter = new CachedCharCounter(mockCounter, 2);
+        cachedCharCounter.count("hello world!");
+        cachedCharCounter.count("hello world!");
+
+        verify(mockCounter, times(1)).count("hello world!");
     }
 }
