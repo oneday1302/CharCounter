@@ -21,7 +21,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>ua.foxminded.javaspring.anagram.AnagramApp</mainClass>
+							<mainClass>ua.foxminded.javaspring.charcounter.CharCounterMain</mainClass>
 						</manifest>
 					</archive>
 				</configuration>
